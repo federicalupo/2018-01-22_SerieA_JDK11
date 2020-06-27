@@ -134,15 +134,10 @@ public class Model {
 		this.migliore = new LinkedHashMap<>(); //provo anche hashmap
 		Map<Integer, Integer> parziale = new LinkedHashMap<>();
 		
-		//Integer primaStagione = this.stagioni.get(0);
-		//Integer primoPunteggio = this.punteggi.get(primaStagione);
-		
 		//se parto dalla prima => o migliora alla seconda oppure non trovo miglioramenti 
 		//magari c'è un miglioramento alla 2° stagione
 		
-		//parziale.put(primaStagione, primoPunteggio);
-		
-		//ricorsiva(parziale, -1, 0);
+
 		ricorsiva(parziale, 0, null);
 		return this.migliore;
 		
@@ -150,35 +145,7 @@ public class Model {
 	}
 	
 	private void ricorsiva(Map<Integer, Integer> parziale, Integer livello, Integer ultimaStagione){
-	//private void ricorsiva(Map<Integer, Integer> parziale, Integer punteggio, Integer partenza) {
-		/*NOOOOOOOOOOOOOOOOOOOOOOOOOO
-		if(parziale.size() > migliore.size()) {
-			this.migliore = new LinkedHashMap<>(parziale);
-			System.out.println("best "+migliore+"\n");
-		}
-		
-		
-		if(parziale.size()==0) {
-			parziale.put(this.stagioni.get(partenza), this.punteggi.get(this.stagioni.get(partenza)));
-			System.out.println(parziale+"\n");
-			ricorsiva(parziale, this.punteggi.get(this.stagioni.get(partenza)), partenza);
-		}
-		
-		for(Integer i : this.stagioni) {	
-			if(!parziale.containsKey(i) && (this.stagioni.indexOf(i)>partenza)) { //perchè se ad esempio riparto dalla lista vuota
-				//e posizione 3, il for parte dalla posizione 1 (tempo precedente) e non va bene
-				Integer punti = this.punteggi.get(i);
-				if(punti > punteggio) {
-					parziale.put(i, punti);
-					ricorsiva(parziale, punti, partenza);
-					
-				}else {
-					parziale = new LinkedHashMap<>();
-					Integer posizioneFermata = this.stagioni.indexOf(i);
-					ricorsiva(parziale, -1, posizioneFermata); //cerca un percorso da dove mi sono fermata
-				}
-			}
-		}*/
+	
 			if(parziale.size() > migliore.size()) {
 				this.migliore = new LinkedHashMap<>(parziale);
 			}
@@ -192,12 +159,10 @@ public class Model {
 				ricorsiva(parziale, livello+1, this.stagioni.get(livello));
 			}else {
 		
-				     //Integer possibileSuccessivo=Integer.MAX_VALUE;
-					//  boolean migliora = true;
 				
 				List<Integer> uscenti = Graphs.successorListOf(this.grafo, ultimaStagione); //punteggio migliore
 				if(!uscenti.contains(this.stagioni.get(livello))) { //decrementa, ricomincio da capo a partire dalla stagione in posizione livello
-					//migliora=false;
+					
 					parziale = new LinkedHashMap<>();
 					ricorsiva(parziale, livello ,null);
 					
@@ -206,27 +171,6 @@ public class Model {
 					parziale.put(this.stagioni.get(livello), this.punteggi.get(this.stagioni.get(livello)));
 					ricorsiva(parziale, livello+1, this.stagioni.get(livello));	
 				}
-				/*for(Integer u : uscenti){
-					if((u.compareTo(ultimaStagione)>0) && (u.compareTo(possibileSuccessivo)<0)) {
-						possibileSuccessivo = u;
-					}
-					
-				}*/
-				
-				/*devo capire se è effettivamente la prima data dopo i in cui gioca
-				
-				for(Integer e : Graphs.predecessorListOf(this.grafo, ultimaStagione)) {
-					if(e.compareTo(ultimaStagione)>0  &&  e.compareTo(possibileSuccessivo)<0) { //vuol dire che la stagione dopo i, decrementa
-						migliora=false;
-					}
-				}
-			
-				if(migliora) {
-					parziale.put(possibileSuccessivo, punteggi.get(possibileSuccessivo));
-					ricorsiva(parziale, livello, possibileSuccessivo);
-				}else {
-					
-				}*/
 			
 			}
 		
