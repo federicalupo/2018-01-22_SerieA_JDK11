@@ -1,9 +1,11 @@
 package it.polito.tdp.seriea;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.seriea.model.Model;
+import it.polito.tdp.seriea.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -21,7 +23,7 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ChoiceBox<?> boxSquadra;
+    private ChoiceBox<Team> boxSquadra;
 
     @FXML
     private Button btnSelezionaSquadra;
@@ -37,16 +39,43 @@ public class FXMLController {
 
     @FXML
     void doSelezionaSquadra(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	
+    	Team team = this.boxSquadra.getValue();
+    	
+    	this.txtResult.appendText("Punti in classifica di "+team+":\n");
+    	
+    	Map<Integer, Integer> punteggi = model.punteggi(team);
+   
+    	
+    	for(Integer i : punteggi.keySet()) {
+    		this.txtResult.appendText(model.getStagioniIdMap().get(i)+" "+punteggi.get(i)+"\n");
+    	}
     }
 
     @FXML
     void doTrovaAnnataOro(ActionEvent event) {
+    	this.txtResult.clear();
+    	
+    	Team team = this.boxSquadra.getValue();
+    	
+    	model.creaGrafo(team);
+    	
+    	this.txtResult.appendText("Grafo creato!\n#vertici: "+model.nVertici()+"\n#archi: "+model.nArchi()+"\n");
+    	this.txtResult.appendText("\nAnnata d'oro: \n"+model.annataOro());
 
     }
 
     @FXML
     void doTrovaCamminoVirtuoso(ActionEvent event) {
+    	this.txtResult.clear();
+    	this.txtResult.appendText("Cammino virtuoso: \n");
+    	
+
+    	
+    	for(Integer i : this.model.camminoVirtuoso().keySet()) {
+    		this.txtResult.appendText(this.model.getStagioniIdMap().get(i)+" "+model.camminoVirtuoso().get(i)+"\n");
+    	}
 
     }
 
@@ -62,5 +91,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		this.boxSquadra.getItems().addAll(model.tendina());
+		this.boxSquadra.setValue(model.tendina().get(0));
 	}
 }
